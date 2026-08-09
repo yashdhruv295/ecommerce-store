@@ -1,0 +1,424 @@
+/* ========================================
+   NAVBAR
+======================================== */
+
+.navbar {
+  width: 100%;
+
+  min-height: 72px;
+
+  padding: 0 6%;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1000;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ========================================
+   LOGO
+======================================== */
+
+.navbar-logo {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  text-decoration: none;
+
+  color: #222;
+
+  font-size: 22px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  transition:
+    transform 0.3s ease;
+}
+
+
+.navbar-logo:hover {
+  transform:
+    translateY(-2px)
+    scale(1.02);
+}
+
+
+.logo-icon {
+  font-size: 28px;
+}
+
+
+/* ========================================
+   NAVIGATION LINKS
+======================================== */
+
+.navbar-links {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.nav-link {
+  position: relative;
+
+  padding: 10px 15px;
+
+  text-decoration: none;
+
+  color: #666;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  border-radius: 8px;
+
+  transition:
+    color 0.3s ease,
+    background 0.3s ease;
+}
+
+
+.nav-link:hover {
+  color: #4f46e5;
+
+  background: rgba(79, 70, 229, 0.08);
+}
+
+
+.nav-link.active {
+  color: #4f46e5;
+
+  background: rgba(79, 70, 229, 0.1);
+}
+
+
+/* Active underline */
+
+.nav-link.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 15px;
+  right: 15px;
+
+  bottom: 4px;
+
+  height: 2px;
+
+  border-radius: 10px;
+
+  background: #4f46e5;
+
+  animation: navUnderline 0.3s ease;
+}
+
+
+/* ========================================
+   ACTIONS
+======================================== */
+
+.navbar-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+/* ========================================
+   CART
+======================================== */
+
+.cart-button {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  position: relative;
+
+  border-radius: 10px;
+
+  background: #f5f5ff;
+
+  text-decoration: none;
+
+  font-size: 20px;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+
+.cart-button:hover {
+  transform:
+    translateY(-3px)
+    scale(1.05);
+
+  background: #e9e7ff;
+}
+
+
+/* Cart count */
+
+.cart-count {
+  position: absolute;
+
+  top: -5px;
+  right: -5px;
+
+  min-width: 18px;
+  height: 18px;
+
+  padding: 0 4px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+
+/* ========================================
+   PROFILE
+======================================== */
+
+.profile-button {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 10px 15px;
+
+  border-radius: 9px;
+
+  background: #4f46e5;
+
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.profile-button:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 8px 20px rgba(79, 70, 229, 0.3);
+}
+
+
+/* ========================================
+   ANIMATION
+======================================== */
+
+@keyframes navUnderline {
+
+  from {
+    width: 0;
+
+    opacity: 0;
+  }
+
+  to {
+    width: auto;
+
+    opacity: 1;
+  }
+
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 850px) {
+
+  .navbar {
+    padding: 0 4%;
+
+    gap: 15px;
+  }
+
+
+  .navbar-links {
+    gap: 2px;
+  }
+
+
+  .nav-link {
+    padding: 9px 10px;
+  }
+
+
+  .profile-button span {
+    display: none;
+  }
+
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 650px) {
+
+  .navbar {
+    min-height: 65px;
+
+    padding: 0 15px;
+
+    gap: 10px;
+  }
+
+
+  .navbar-logo {
+    font-size: 18px;
+  }
+
+
+  .logo-icon {
+    font-size: 23px;
+  }
+
+
+  .navbar-links {
+    gap: 0;
+  }
+
+
+  .nav-link {
+    padding: 8px;
+
+    font-size: 13px;
+  }
+
+
+  .nav-link.active::after {
+    left: 8px;
+    right: 8px;
+  }
+
+
+  .cart-button {
+    width: 38px;
+    height: 38px;
+  }
+
+
+  .profile-button {
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    justify-content: center;
+  }
+
+}
+
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 450px) {
+
+  .navbar {
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    padding: 12px 10px;
+  }
+
+
+  .navbar-logo {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+
+  .navbar-links {
+    order: 3;
+
+    width: 100%;
+
+    justify-content: center;
+  }
+
+
+  .navbar-actions {
+    position: absolute;
+
+    right: 10px;
+
+    top: 12px;
+  }
+
+}
