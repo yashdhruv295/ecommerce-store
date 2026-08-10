@@ -1,50 +1,93 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+
 import "../styles/navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { cartCount } = useCart();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setMenuOpen(false);
+  };
 
   return (
     <nav className="navbar">
 
-      {/* Logo */}
+      {/* =========================
+          BRAND / LOGO
+      ========================== */}
       <div
-        className="navbar-logo"
-        onClick={() => navigate("/home")}
+        className="navbar-brand"
+        onClick={() => handleNavigation("/home")}
       >
-        🛍️
-        <span>EcomStore</span>
+        <div className="brand-icon">
+          🛍️
+        </div>
+
+        <div className="brand-text">
+          <span className="brand-name">Ecom</span>
+          <span className="brand-store">Store</span>
+        </div>
       </div>
 
 
-      {/* Navigation Links */}
-      <div className="navbar-links">
+      {/* =========================
+          DESKTOP NAVIGATION
+      ========================== */}
+      <div className={`navbar-links ${menuOpen ? "mobile-open" : ""}`}>
 
-        <Link to="/home">
+        <Link
+          to="/home"
+          className={isActive("/home") ? "active" : ""}
+          onClick={() => setMenuOpen(false)}
+        >
+          <span className="nav-icon">⌂</span>
           Home
         </Link>
 
-        <Link to="/products">
+        <Link
+          to="/products"
+          className={isActive("/products") ? "active" : ""}
+          onClick={() => setMenuOpen(false)}
+        >
+          <span className="nav-icon">▦</span>
           Products
         </Link>
 
-        <Link to="/dashboard">
+        <Link
+          to="/dashboard"
+          className={isActive("/dashboard") ? "active" : ""}
+          onClick={() => setMenuOpen(false)}
+        >
+          <span className="nav-icon">▥</span>
           Dashboard
         </Link>
 
       </div>
 
 
-      {/* Right Side */}
+      {/* =========================
+          RIGHT ACTIONS
+      ========================== */}
       <div className="navbar-actions">
 
         {/* Cart */}
         <Link
           to="/cart"
-          className="cart-button"
+          className={`cart-button ${
+            isActive("/cart") ? "cart-active" : ""
+          }`}
           aria-label="Shopping Cart"
         >
           <span className="cart-icon">
@@ -55,9 +98,11 @@ function Navbar() {
             Cart
           </span>
 
-          <span className="cart-count">
-            {cartCount}
-          </span>
+          {cartCount > 0 && (
+            <span className="cart-count">
+              {cartCount > 99 ? "99+" : cartCount}
+            </span>
+          )}
         </Link>
 
 
@@ -66,8 +111,29 @@ function Navbar() {
           to="/login"
           className="navbar-login"
         >
-          Login
+          <span className="login-icon">
+            👤
+          </span>
+
+          <span>
+            Login
+          </span>
         </Link>
+
+
+        {/* Mobile Menu Button */}
+        <button
+          className={`menu-toggle ${
+            menuOpen ? "open" : ""
+          }`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
       </div>
 

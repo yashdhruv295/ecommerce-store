@@ -1,85 +1,264 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+} from "react-router-dom";
+
+import Navbar from "../components/Navbar";
+
 import "../styles/dashboard.css";
 
+
 function Dashboard() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem("ecommerceUser");
+  const navigate =
+    useNavigate();
 
-    if (!savedUser) {
-      navigate("/login");
-      return;
-    }
-
-    setUser(JSON.parse(savedUser));
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("ecommerceUser");
-    navigate("/login");
-  };
-
-  if (!user) {
-    return null;
-  }
 
   return (
-    <div className="dashboard-page">
 
-      <header className="dashboard-header">
-        <div>
-          <h1>E-Commerce Store</h1>
-          <p>Welcome to your dashboard</p>
-        </div>
+    <>
 
-        <button onClick={handleLogout}>
-          Logout
-        </button>
-      </header>
+      <Navbar />
 
-      <main className="dashboard-content">
 
-        <section className="welcome-card">
-          <h2>
-            Welcome, {user.fullName} 👋
-          </h2>
+      <main className="dashboard-container">
+
+
+        {/* HEADER */}
+
+        <section className="dashboard-header">
+
+          <span className="dashboard-label">
+            MY ACCOUNT
+          </span>
+
+          <h1>
+            Dashboard
+          </h1>
 
           <p>
-            You are successfully logged in.
+            Manage your shopping account,
+            orders and products.
           </p>
-        </section>
-
-        <section className="dashboard-cards">
-
-          <div className="dashboard-card">
-            <h3>My Profile</h3>
-            <p>View and manage your profile.</p>
-          </div>
-
-          <div className="dashboard-card">
-            <h3>Products</h3>
-            <p>Browse our available products.</p>
-          </div>
-
-          <div className="dashboard-card">
-            <h3>My Orders</h3>
-            <p>View your orders and order status.</p>
-          </div>
-
-          <div className="dashboard-card">
-            <h3>Cart</h3>
-            <p>View products added to your cart.</p>
-          </div>
 
         </section>
+
+
+        {/* CARDS */}
+
+        <section className="dashboard-grid">
+
+
+          {/* CART */}
+
+          <div
+            className="dashboard-card"
+            onClick={() =>
+              navigate(
+                "/cart"
+              )
+            }
+          >
+
+            <div className="dashboard-card-icon">
+              🛒
+            </div>
+
+            <div className="dashboard-card-content">
+
+              <h2>
+                Cart
+              </h2>
+
+              <p>
+                View your shopping cart
+                and manage your items.
+              </p>
+
+              <span>
+                View Cart →
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* ORDERS */}
+
+          <div
+            className="dashboard-card"
+            onClick={() =>
+              navigate(
+                "/orders"
+              )
+            }
+          >
+
+            <div className="dashboard-card-icon">
+              📦
+            </div>
+
+            <div className="dashboard-card-content">
+
+              <h2>
+                My Orders
+              </h2>
+
+              <p>
+                View your previous and
+                current orders.
+              </p>
+
+              <span>
+                View Orders →
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* PRODUCTS */}
+
+          <div
+            className="dashboard-card"
+            onClick={() =>
+              navigate(
+                "/products"
+              )
+            }
+          >
+
+            <div className="dashboard-card-icon">
+              🛍️
+            </div>
+
+            <div className="dashboard-card-content">
+
+              <h2>
+                Products
+              </h2>
+
+              <p>
+                Browse all available
+                products.
+              </p>
+
+              <span>
+                Shop Products →
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* PROFILE */}
+
+          <div
+            className="dashboard-card"
+            onClick={() =>
+              navigate(
+                "/profile"
+              )
+            }
+          >
+
+            <div className="dashboard-card-icon">
+              👤
+            </div>
+
+            <div className="dashboard-card-content">
+
+              <h2>
+                My Profile
+              </h2>
+
+              <p>
+                View and manage your
+                profile information.
+              </p>
+
+              <span>
+                View Profile →
+              </span>
+
+            </div>
+
+          </div>
+
+
+        </section>
+
+
+        {/* QUICK ACTIONS */}
+
+        <section className="dashboard-actions">
+
+          <h2>
+            Quick Actions
+          </h2>
+
+
+          <div className="quick-actions-grid">
+
+
+            <button
+              onClick={() =>
+                navigate(
+                  "/products"
+                )
+              }
+            >
+              🛍️ Continue Shopping
+            </button>
+
+
+            <button
+              onClick={() =>
+                navigate(
+                  "/cart"
+                )
+              }
+            >
+              🛒 Open Cart
+            </button>
+
+
+            <button
+              onClick={() =>
+                navigate(
+                  "/orders"
+                )
+              }
+            >
+              📦 My Orders
+            </button>
+
+
+            <button
+              onClick={() =>
+                navigate(
+                  "/profile"
+                )
+              }
+            >
+              👤 My Profile
+            </button>
+
+
+          </div>
+
+        </section>
+
 
       </main>
 
-    </div>
+    </>
+
   );
+
 }
+
 
 export default Dashboard;

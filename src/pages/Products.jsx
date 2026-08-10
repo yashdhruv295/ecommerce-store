@@ -10,15 +10,16 @@ import "../styles/products.css";
 
 function Products() {
   const navigate = useNavigate();
+
   const { addToCart } = useCart();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // ========================================
+  // FETCH PRODUCTS FROM FIREBASE
+  // ========================================
 
   const fetchProducts = async () => {
     try {
@@ -34,8 +35,9 @@ function Products() {
         ...doc.data(),
       }));
 
-      setProducts(productList);
+      console.log("Firebase Products:", productList);
 
+      setProducts(productList);
     } catch (error) {
       console.error("Error fetching products:", error);
 
@@ -47,141 +49,195 @@ function Products() {
     }
   };
 
-  const handleAddToCart = (product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: Number(product.price) || 0,
-      image: product.image || "",
-      category: product.category || "",
-      quantity: 1,
-    });
+  // ========================================
+  // LOAD PRODUCTS ON PAGE LOAD
+  // ========================================
 
-    alert(`${product.name} added to cart!`);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // ========================================
+  // ADD TO CART
+  // ========================================
+
+  const handleAddToCart = (product) => {
+    if (!product) {
+      return;
+    }
+
+    const stock = Number(product.stock);
+
+    if (product.stock !== undefined && stock <= 0) {
+      alert("This product is out of stock.");
+      return;
+    }
+
+    addToCart(product, 1);
+
+    alert(`${product.name || "Product"} added to cart!`);
+  };
+
+  // ========================================
+  // BUY NOW
+  // ========================================
+
+  const handleBuyNow = (product) => {
+    if (!product) {
+      return;
+    }
+
+    const stock = Number(product.stock);
+
+    if (product.stock !== undefined && stock <= 0) {
+      alert("This product is out of stock.");
+      return;
+    }
+
+    addToCart(product, 1);
+
+    navigate("/cart");
+  };
+
+  // ========================================
+  // IMAGE ERROR HANDLER
+  // ========================================
+
+  const handleImageError = (event) => {
+    event.currentTarget.onerror = null;
+
+    event.currentTarget.src =
+      "https://placehold.co/800x600?text=Product+Image";
+  };
+
+  // ========================================
+  // IMAGE LOADING HANDLER
+  // ========================================
+
+  const handleImageLoad = (event) => {
+    event.currentTarget.classList.add("image-loaded");
   };
 
   return (
-    <div className="products-page">
-
+    <>
       <Navbar />
 
       <main className="products-container">
-
-        {/* HEADER */}
+        {/* ========================================
+            HEADER
+        ======================================== */}
 
         <div className="products-header">
-
           <div>
             <span>OUR COLLECTION</span>
 
             <h1>All Products</h1>
 
             <p>
-              Discover our latest products and
-              find something you love.
+              Discover our latest products and find something you love.
             </p>
           </div>
 
           <button
+            type="button"
             className="refresh-button"
             onClick={fetchProducts}
+            disabled={loading}
           >
-            ↻ Refresh
+            {loading ? "Loading..." : "↻ Refresh"}
           </button>
-
         </div>
 
-        {/* LOADING */}
+        {/* ========================================
+            LOADING
+        ======================================== */}
 
         {loading && (
           <div className="products-message">
-
             <div className="loading-spinner"></div>
 
-            <p>
-              Loading products...
-            </p>
-
+            <p>Loading products...</p>
           </div>
         )}
 
-        {/* ERROR */}
+        {/* ========================================
+            ERROR
+        ======================================== */}
 
         {!loading && error && (
           <div className="products-message error-message">
+            <div className="empty-icon">⚠️</div>
 
-            <div>⚠️</div>
+            <h2>Something went wrong</h2>
 
-            <h2>
-              Something went wrong
-            </h2>
+            <p>{error}</p>
 
-            <p>
-              {error}
-            </p>
-
-            <button onClick={fetchProducts}>
+            <button
+              type="button"
+              onClick={fetchProducts}
+            >
               Try Again
             </button>
-
           </div>
         )}
 
-        {/* EMPTY */}
+        {/* ========================================
+            EMPTY
+        ======================================== */}
 
-        {!loading &&
-          !error &&
-          products.length === 0 && (
-            <div className="products-message">
+        {!loading && !error && products.length === 0 && (
+          <div className="products-message">
+            <div className="empty-icon">🛍️</div>
 
-              <div className="empty-icon">
-                🛍️
-              </div>
+            <h2>No Products Found</h2>
 
-              <h2>
-                No Products Found
-              </h2>
+            <p>
+              There are currently no products in the Firebase
+              products collection.
+            </p>
 
-              <p>
-                There are currently no products
-                in the Firebase products collection.
-              </p>
+            <button
+              type="button"
+              onClick={fetchProducts}
+            >
+              Refresh Products
+            </button>
+          </div>
+        )}
 
-            </div>
-          )}
+        {/* ========================================
+            PRODUCTS GRID
+        ======================================== */}
 
-        {/* PRODUCTS */}
+        {!loading && !error && products.length > 0 && (
+          <div className="products-grid">
+            {products.map((product) => {
+              const outOfStock =
+                product.stock !== undefined &&
+                Number(product.stock) <= 0;
 
-        {!loading &&
-          !error &&
-          products.length > 0 && (
-
-            <div className="products-grid">
-
-              {products.map((product) => (
-
+              return (
                 <div
                   className="product-card"
                   key={product.id}
                 >
-
-                  {/* IMAGE */}
+                  {/* ========================================
+                      PRODUCT IMAGE
+                  ======================================== */}
 
                   <div className="product-image">
+                    <img
+                      src={
+                        product.image ||
+                        "https://placehold.co/800x600?text=Product+Image"
+                      }
+                      alt={product.name || "Product"}
+                      loading="lazy"
+                      onError={handleImageError}
+                      onLoad={handleImageLoad}
+                    />
 
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                        }}
-                      />
-                    ) : (
-                      <div className="no-image">
-                        🛍️
-                      </div>
-                    )}
+                    {/* CATEGORY */}
 
                     {product.category && (
                       <span className="product-category">
@@ -189,45 +245,79 @@ function Products() {
                       </span>
                     )}
 
+                    {/* OUT OF STOCK */}
+
+                    {outOfStock && (
+                      <span className="out-of-stock-badge">
+                        Out of Stock
+                      </span>
+                    )}
                   </div>
 
-                  {/* DETAILS */}
+                  {/* ========================================
+                      PRODUCT CONTENT
+                  ======================================== */}
 
                   <div className="product-content">
+                    {/* PRODUCT NAME */}
 
                     <h2>
                       {product.name || "Unnamed Product"}
                     </h2>
+
+                    {/* DESCRIPTION */}
 
                     <p className="product-description">
                       {product.description ||
                         "No description available."}
                     </p>
 
-                    <div className="product-bottom">
+                    {/* RATING */}
 
+                    {product.rating !== undefined && (
+                      <div className="product-rating">
+                        <span>★</span>
+
+                        <span>
+                          {Number(product.rating).toFixed(1)}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* PRICE + STOCK */}
+
+                    <div className="product-bottom">
                       <strong className="product-price">
                         ₹
-                        {Number(
-                          product.price || 0
-                        ).toLocaleString("en-IN")}
+                        {Number(product.price || 0).toLocaleString(
+                          "en-IN"
+                        )}
                       </strong>
 
                       {product.stock !== undefined && (
-                        <span className="product-stock">
-                          {product.stock > 0
-                            ? `${product.stock} in stock`
-                            : "Out of stock"}
+                        <span
+                          className={
+                            outOfStock
+                              ? "product-stock out"
+                              : "product-stock"
+                          }
+                        >
+                          {outOfStock
+                            ? "Out of stock"
+                            : `${product.stock} in stock`}
                         </span>
                       )}
-
                     </div>
 
-                    {/* BUTTONS */}
+                    {/* ========================================
+                        BUTTONS
+                    ======================================== */}
 
                     <div className="product-buttons">
+                      {/* VIEW DETAILS */}
 
                       <button
+                        type="button"
                         className="details-button"
                         onClick={() =>
                           navigate(
@@ -238,12 +328,12 @@ function Products() {
                         View Details
                       </button>
 
+                      {/* ADD TO CART */}
+
                       <button
+                        type="button"
                         className="cart-button"
-                        disabled={
-                          product.stock !== undefined &&
-                          Number(product.stock) <= 0
-                        }
+                        disabled={outOfStock}
                         onClick={() =>
                           handleAddToCart(product)
                         }
@@ -251,20 +341,27 @@ function Products() {
                         🛒 Add to Cart
                       </button>
 
+                      {/* BUY NOW */}
+
+                      <button
+                        type="button"
+                        className="buy-now-button"
+                        disabled={outOfStock}
+                        onClick={() =>
+                          handleBuyNow(product)
+                        }
+                      >
+                        ⚡ Buy Now
+                      </button>
                     </div>
-
                   </div>
-
                 </div>
-
-              ))}
-
-            </div>
-          )}
-
+              );
+            })}
+          </div>
+        )}
       </main>
-
-    </div>
+    </>
   );
 }
 

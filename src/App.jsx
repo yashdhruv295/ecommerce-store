@@ -1,5 +1,5 @@
 import {
-  BrowserRouter,
+  HashRouter,
   Routes,
   Route,
   Navigate,
@@ -13,78 +13,116 @@ import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
+import Profile from "./pages/Profile";
 
 import { CartProvider } from "./context/CartContext";
 
 function App() {
   return (
-    <BrowserRouter basename="/ecommerce-store">
+    <HashRouter>
       <CartProvider>
+
         <Routes>
 
-          {/* DEFAULT PAGE → LOGIN */}
+          {/* DEFAULT */}
+
           <Route
             path="/"
-            element={<Navigate to="/login" replace />}
+            element={
+              <Navigate
+                to="/login"
+                replace
+              />
+            }
           />
 
           {/* LOGIN */}
+
           <Route
             path="/login"
             element={<Login />}
           />
 
           {/* REGISTER */}
+
           <Route
             path="/register"
             element={<Register />}
           />
 
           {/* HOME */}
+
           <Route
             path="/home"
             element={<Home />}
           />
 
           {/* DASHBOARD */}
+
           <Route
             path="/dashboard"
             element={<Dashboard />}
           />
 
           {/* PRODUCTS */}
+
           <Route
             path="/products"
             element={<Products />}
           />
 
           {/* PRODUCT DETAILS */}
+
           <Route
             path="/product/:id"
             element={<ProductDetails />}
           />
 
           {/* CART */}
+
           <Route
             path="/cart"
             element={<Cart />}
           />
 
+          {/* ORDERS */}
+
+          <Route
+            path="/orders"
+            element={<Orders />}
+          />
+
+          {/* PROFILE */}
+
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
           {/* CHECKOUT */}
+
           <Route
             path="/checkout"
             element={<Checkout />}
           />
 
-          {/* INVALID URL → LOGIN */}
+          {/* INVALID URL */}
+
           <Route
             path="*"
-            element={<Navigate to="/login" replace />}
+            element={
+              <Navigate
+                to="/login"
+                replace
+              />
+            }
           />
 
         </Routes>
+
       </CartProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
